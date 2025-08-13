@@ -1,0 +1,3 @@
+[submodule "hetzner"]
+	path = hetzner
+	url = https://github.com/AidanWarner97/hetzner_python.git

@@ -1,0 +1,39 @@
+[Unit]
+Description=Hetzner Server Monitor
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=monitor
+Group=monitor
+WorkingDirectory=/opt/server_monitor
+ExecStart=/opt/server_monitor/.venv/bin/python /opt/server_monitor/production_monitor.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=server-monitor
+
+# Security settings
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/opt/server_monitor
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+
+# Resource limits
+MemoryLimit=128M
+TasksMax=10
+
+# Environment
+Environment=PYTHONPATH=/opt/server_monitor
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

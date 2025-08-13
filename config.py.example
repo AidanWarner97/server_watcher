@@ -1,0 +1,90 @@
+# Configuration file for Hetzner Server Monitor
+# Copy this file and configure with your actual values
+
+# Hetzner Robot API credentials
+HETZNER_USERNAME = "your_hetzner_username"
+HETZNER_PASSWORD = "your_hetzner_password"
+
+# Server IP address to monitor
+SERVER_IP = "your_server_ip"
+
+# Monitoring settings
+CHECK_INTERVAL_MINUTES = 1  # How often to check if server is online (in minutes)
+RESTART_WAIT_MINUTES = 5    # How long to wait after restart before checking again (in minutes)
+MAX_RESTART_ATTEMPTS = 3    # Maximum number of restart attempts before giving up
+VERIFICATION_CHECKS = 3     # Number of additional verification checks before restart
+VERIFICATION_INTERVAL_SECONDS = 30  # Seconds between verification checks
+SSH_PORT = 22               # SSH port to check for connectivity
+SSH_TIMEOUT = 10            # SSH connection timeout in seconds
+
+# Logging settings
+LOG_LEVEL = "INFO"          # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+LOG_FILE = "server_monitor.log"
+LOG_MAX_SIZE_MB = 10        # Maximum log file size in MB
+LOG_BACKUP_COUNT = 5        # Number of backup log files to keep
+
+# Discord webhook notifications (optional - set enabled to False to disable)
+DISCORD_NOTIFICATIONS = {
+    "enabled": False,  # Set to True to enable Discord notifications
+    "webhook_url": "https://discord.com/api/webhooks/YOUR_WEBHOOK_URL",
+    "username": "Server Monitor",  # Bot username in Discord
+    "avatar_url": "",  # Optional: URL to bot avatar image
+    "mention_role": "",  # Optional: Role ID to mention (e.g., "123456789012345678")
+    "mention_user": "",  # Optional: User ID to mention (e.g., "987654321098765432")
+    "embed_color": {
+        "online": 0x00FF00,      # Green for server online
+        "offline": 0xFF0000,     # Red for server offline  
+        "restart": 0xFFFF00,     # Yellow for restart attempts
+        "warning": 0xFF8000,     # Orange for warnings
+        "info": 0x0080FF         # Blue for general info
+    },
+    "timeout": 30
+}
+
+# Health check URLs for URL-based monitoring
+# Customize these URLs based on your server's services
+HEALTH_CHECK_URLS = [
+    {
+        'name': 'Web Server Status',
+        'url': 'http://YOUR_SERVER_IP/',
+        'expected_status': [200, 301, 302],
+        'timeout': 10,
+        'critical': True  # If this fails, consider server offline
+    },
+    {
+        'name': 'Admin Panel',
+        'url': 'http://YOUR_SERVER_IP/admin',
+        'expected_status': [200, 401, 403],  # 401/403 means service is up but requires auth
+        'timeout': 10,
+        'critical': False  # Optional check
+    },
+    {
+        'name': 'API Health',
+        'url': 'http://YOUR_SERVER_IP/api/health',
+        'expected_status': [200],
+        'expected_content': 'ok',  # Look for "ok" in response
+        'timeout': 10,
+        'critical': False
+    }
+    # Add more URLs as needed for your specific services
+]
+
+# Alternative monitoring modes
+MONITORING_MODE = "ssh"  # Options: "ssh", "url", "advanced"
+
+# SSH-specific settings (for ssh mode)
+SSH_PORT = 22
+SSH_TIMEOUT = 10
+
+# Advanced monitoring settings
+ADVANCED_CHECKS = {
+    "ping": True,      # Include ping checks
+    "http": True,      # Include HTTP port checks
+    "https": True,     # Include HTTPS port checks
+    "custom_ports": [  # Additional ports to check
+        # 3306,  # MySQL
+        # 5432,  # PostgreSQL
+        # 6379,  # Redis
+        # 27017, # MongoDB
+    ]
+}
